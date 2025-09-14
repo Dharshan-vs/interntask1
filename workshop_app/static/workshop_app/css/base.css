@@ -595,7 +595,7 @@ body::after {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .base-content {
+.base-content {
         padding-top: 5rem;
         padding-bottom: 4rem;
     }

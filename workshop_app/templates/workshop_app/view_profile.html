@@ -147,14 +147,14 @@
                                             <th class="border-0">
                                                 <span class="material-icons me-1">school</span>
                                                 Workshop Type
-                                            </th>
-                                        </tr>
+                    </th>
+                </tr>
                                     </thead>
                                     <tbody>
                                         {% for workshop in Workshops %}
                                             <tr>
                                                 <td>
-                                                    {% if workshop.instructor %}
+                {% if workshop.instructor %}
                                                         <div class="d-flex align-items-center">
                                                             <span class="material-icons me-2 text-success">check_circle</span>
                                                             <span class="fw-medium">{{ workshop.instructor }}</span>
@@ -168,13 +168,13 @@
                                                 </td>
                                                 <td>
                                                     <span class="fw-medium">{{ workshop.date|date:"M d, Y" }}</span>
-                                                </td>
+                        </td>
                                                 <td>
                                                     <span class="badge bg-info text-dark">
                                                         {{ workshop.workshop_type }}
                                                     </span>
-                                                </td>
-                                            </tr>
+                        </td>
+                    </tr>
                                         {% empty %}
                                             <tr>
                                                 <td colspan="3" class="text-center py-4">
@@ -183,11 +183,11 @@
                                                         <h6>No workshops found</h6>
                                                         <p class="mb-0">This user hasn't participated in any workshops yet</p>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
+                        </td>
+                    </tr>
+            {% endfor %}
                                     </tbody>
-                                </table>
+            </table>
                             </div>
                         </div>
                     </div>
@@ -207,10 +207,10 @@
                         </div>
                         <div class="card-body p-4">
                             <form method="post" novalidate>
-                                {% csrf_token %}
+              {% csrf_token %}
                                 
                                 <!-- Display form errors -->
-                                {% if form.errors %}
+                            {% if form.errors %}
                                     <div class="alert alert-danger" role="alert">
                                         <div class="d-flex align-items-center">
                                             <span class="material-icons me-2">error</span>
@@ -220,14 +220,14 @@
                                             {% for field in form %}
                                                 {% for error in field.errors %}
                                                     <li>{{ field.label }}: {{ error|escape }}</li>
-                                                {% endfor %}
-                                            {% endfor %}
-                                            {% for error in form.non_field_errors %}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
                                                 <li>{{ error|escape }}</li>
                                             {% endfor %}
                                         </ul>
                                     </div>
-                                {% endif %}
+                            {% endif %}
 
                                 <div class="row g-3">
                                     <!-- Title -->
@@ -323,7 +323,7 @@
                                         Update Profile
                                     </button>
                                 </div>
-                            </form>
+                    </form>
                         </div>
                     </div>
                 </div>

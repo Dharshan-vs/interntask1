@@ -1,9 +1,9 @@
 {% extends 'workshop_app/base.html' %}
 {% load custom_filters %}
 
-{% block title %}
+	{% block title %}
     Register - FOSSEE Workshop Booking
-{% endblock %}
+	{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -19,7 +19,7 @@
                     </div>
                     <div class="card-body p-4">
                         <form method="post" novalidate>
-                            {% csrf_token %}
+			{% csrf_token %}
                             
                             <!-- Display form errors -->
                             {% if form.errors %}
@@ -177,5 +177,5 @@
                 </div>
             </div>
         </div>
-    </div>
+	</div>
 {% endblock %}
