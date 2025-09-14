@@ -18,16 +18,25 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #6c757d;
-            --success-color: #198754;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --light-bg: #f8f9fa;
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            --secondary-color: #64748b;
+            --success-color: #059669;
+            --success-gradient: linear-gradient(135deg, #059669 0%, #047857 100%);
+            --warning-color: #d97706;
+            --warning-gradient: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            --danger-color: #dc2626;
+            --danger-gradient: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            --light-bg: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             --card-bg: #ffffff;
-            --text-color: #212529;
-            --border-color: #dee2e6;
-            --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
@@ -37,9 +46,10 @@
         }
 
         #header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #0a58ca 100%);
-            box-shadow: var(--shadow);
+            background: var(--primary-gradient);
+            box-shadow: var(--shadow-lg);
             border-bottom: none;
+            backdrop-filter: blur(10px);
         }
 
         #site-name a {
@@ -77,13 +87,30 @@
         }
 
         .module h2 {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #0a58ca 100%);
+            background: var(--primary-gradient);
             color: white;
-            border-radius: 0.5rem 0.5rem 0 0;
+            border-radius: 12px 12px 0 0;
             padding: 1rem 1.5rem;
             margin: 0;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module h2::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .module h2:hover::before {
+            left: 100%;
         }
 
         .module h3 {
@@ -113,56 +140,111 @@
         }
 
         .module tr:hover {
-            background-color: rgba(13, 110, 253, 0.05);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+            transform: translateX(2px);
+            transition: var(--transition);
         }
 
         .module a {
             color: var(--primary-color);
             text-decoration: none;
             font-weight: 500;
+            transition: var(--transition);
         }
 
         .module a:hover {
-            color: #0a58ca;
+            color: var(--primary-hover);
             text-decoration: underline;
+            transform: translateX(2px);
         }
 
         .button, input[type="submit"], input[type="button"], .submit-row input, a.button {
-            background: var(--primary-color);
+            background: var(--primary-gradient);
             border: none;
-            border-radius: 0.375rem;
+            border-radius: 12px;
             color: white;
-            padding: 0.5rem 1rem;
-            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.2s ease;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            letter-spacing: 0.5px;
+        }
+
+        .button::before, input[type="submit"]::before, input[type="button"]::before, .submit-row input::before, a.button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .button:hover::before, input[type="submit"]:hover::before, input[type="button"]:hover::before, .submit-row input:hover::before, a.button:hover::before {
+            left: 100%;
         }
 
         .button:hover, input[type="submit"]:hover, input[type="button"]:hover, .submit-row input:hover, a.button:hover {
-            background: #0a58ca;
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
             color: white;
             text-decoration: none;
-            transform: translateY(-1px);
-            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-lg);
         }
 
         .button.default, input[type="submit"].default, .submit-row input.default {
-            background: var(--success-color);
+            background: var(--success-gradient);
         }
 
         .button.default:hover, input[type="submit"].default:hover, .submit-row input.default:hover {
-            background: #157347;
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
         }
 
         .deletelink {
-            background: var(--danger-color) !important;
+            background: var(--danger-gradient) !important;
         }
 
         .deletelink:hover {
-            background: #b02a37 !important;
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
+        }
+
+        /* Add and Change links styling */
+        .addlink, .changelink {
+            background: var(--success-gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .addlink:hover, .changelink:hover {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .changelink {
+            background: var(--warning-gradient);
+        }
+
+        .changelink:hover {
+            background: linear-gradient(135deg, #b45309 0%, #92400e 100%);
         }
 
         .breadcrumbs {
