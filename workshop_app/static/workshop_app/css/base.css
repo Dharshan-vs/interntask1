@@ -112,6 +112,7 @@ body::after {
     z-index: 1000;
     box-shadow: var(--shadow-lg);
     background: var(--primary-gradient) !important;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     transition: var(--transition);
@@ -175,6 +176,7 @@ body::after {
     border: none;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-xl);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     background: rgba(255, 255, 255, 0.95);
     animation: dropdownSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -217,6 +219,7 @@ body::after {
     box-shadow: var(--shadow-md);
     transition: var(--transition);
     background: var(--card-bg);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     position: relative;
@@ -390,6 +393,7 @@ body::after {
     padding: 1rem 1.25rem;
     transition: var(--transition);
     background: rgba(255, 255, 255, 0.9);
+    -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     font-size: 1rem;
     position: relative;
@@ -441,6 +445,7 @@ body::after {
     padding: 1rem 1.25rem;
     transition: var(--transition);
     background: rgba(255, 255, 255, 0.9);
+    -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
 }
 
@@ -487,6 +492,7 @@ body::after {
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     background: var(--card-bg);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
