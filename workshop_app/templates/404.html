@@ -1,7 +1,8 @@
-{% extends 'workshop_app/base.html' %}
+{% extends "workshop_app/base.html" %}
+{% load static %}
 
 {% block title %}
-    Logged Out - FOSSEE Workshop Booking
+    Page Not Found - FOSSEE Workshop Booking
 {% endblock %}
 
 {% block content %}
@@ -11,20 +12,22 @@
                 <div class="card shadow-lg border-0 text-center">
                     <div class="card-body py-5">
                         <div class="mb-4">
-                            <span class="material-icons text-success" style="font-size: 6rem; opacity: 0.7;">check_circle</span>
+                            <span class="material-icons text-primary" style="font-size: 6rem; opacity: 0.7;">error_outline</span>
                         </div>
-                        <h1 class="h2 mb-3">Logged Out Successfully</h1>
+                        <h1 class="display-4 mb-3">404</h1>
+                        <h2 class="h3 mb-3">Page Not Found</h2>
                         <p class="text-muted mb-4">
-                            You have been logged out of your account. Thank you for using FOSSEE Workshop Booking!
+                            Sorry, the page you are looking for doesn't exist or has been moved. 
+                            Let's get you back on track!
                         </p>
                         <div class="d-flex justify-content-center gap-3 flex-wrap">
                             <a href="{% url 'workshop_app:index' %}" class="btn btn-primary">
                                 <span class="material-icons me-2">home</span>
                                 Go Home
                             </a>
-                            <a href="{% url 'workshop_app:login' %}" class="btn btn-outline-primary">
-                                <span class="material-icons me-2">login</span>
-                                Login Again
+                            <a href="{% url 'workshop_app:workshop_type_list' %}" class="btn btn-outline-primary">
+                                <span class="material-icons me-2">workshop</span>
+                                Browse Workshops
                             </a>
                         </div>
                     </div>

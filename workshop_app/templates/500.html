@@ -1,7 +1,8 @@
-{% extends 'workshop_app/base.html' %}
+{% extends "workshop_app/base.html" %}
+{% load static %}
 
 {% block title %}
-    Logged Out - FOSSEE Workshop Booking
+    Server Error - FOSSEE Workshop Booking
 {% endblock %}
 
 {% block content %}
@@ -11,21 +12,23 @@
                 <div class="card shadow-lg border-0 text-center">
                     <div class="card-body py-5">
                         <div class="mb-4">
-                            <span class="material-icons text-success" style="font-size: 6rem; opacity: 0.7;">check_circle</span>
+                            <span class="material-icons text-danger" style="font-size: 6rem; opacity: 0.7;">warning</span>
                         </div>
-                        <h1 class="h2 mb-3">Logged Out Successfully</h1>
+                        <h1 class="display-4 mb-3">500</h1>
+                        <h2 class="h3 mb-3">Server Error</h2>
                         <p class="text-muted mb-4">
-                            You have been logged out of your account. Thank you for using FOSSEE Workshop Booking!
+                            Oops! Something went wrong on our end. We're working to fix this issue. 
+                            Please try again later or contact support if the problem persists.
                         </p>
                         <div class="d-flex justify-content-center gap-3 flex-wrap">
                             <a href="{% url 'workshop_app:index' %}" class="btn btn-primary">
                                 <span class="material-icons me-2">home</span>
                                 Go Home
                             </a>
-                            <a href="{% url 'workshop_app:login' %}" class="btn btn-outline-primary">
-                                <span class="material-icons me-2">login</span>
-                                Login Again
-                            </a>
+                            <button onclick="history.back()" class="btn btn-outline-secondary">
+                                <span class="material-icons me-2">arrow_back</span>
+                                Go Back
+                            </button>
                         </div>
                     </div>
                 </div>

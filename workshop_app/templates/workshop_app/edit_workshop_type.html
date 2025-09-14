@@ -1,111 +1,214 @@
 {% extends 'workshop_app/base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}
-    Add new Workshop type
+    Edit Workshop Type - FOSSEE Workshop Booking
 {% endblock %}
 
 {% block extra-dependencies %}
 {% endblock %}
 
 {% block extra-custom-scripts %}
-
     <script src="{% static 'workshop_app/js/jquery.formset.js' %}"></script>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <h2 class="text-center m-2">View / Edit Workshop Type</h2>
-        <br>
-        <form method="post" enctype="multipart/form-data">
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Workshop Name :</div>
-                <div class="col text-left">
-                    <div class="row">
-                        <div class="col">{{ form.name }}</div>
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <h1 class="h2 mb-1">
+                            <span class="material-icons me-2 text-primary">edit</span>
+                            Edit Workshop Type
+                        </h1>
+                        <p class="text-muted mb-0">Update workshop type details and attachments</p>
                     </div>
-                    <div class="row m-1 text-danger">
-                        <div class="col">{{ form.name.errors }}</div>
-                    </div>
+                    <a href="{% url 'workshop_app:workshop_type_list' %}" class="btn btn-outline-primary">
+                        <span class="material-icons me-1">arrow_back</span>
+                        Back to Workshop Types
+                    </a>
                 </div>
+            </div>
+        </div>
 
-            </div>
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Duration :</div>
-                <div class="col text-left">
-                    <div class="row">
-                        <div class="col">{{ form.duration }}</div>
+        <!-- Form Card -->
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header text-center py-4">
+                        <h3 class="mb-0">
+                            <span class="material-icons me-2">workshop</span>
+                            Workshop Type Details
+                        </h3>
+                        <p class="text-muted mt-2 mb-0">Update the workshop information and attachments</p>
                     </div>
-                    <div class="row m-1 text-muted">
-                        <div class="col">{{ form.duration.help_text }}</div>
-                    </div>
-                    <div class="row m-1 text-danger">
-                        <div class="col">{{ form.duration.errors }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Description :</div>
-                <div class="col text-left">
-                    <div class="row">
-                        <div class="col">{{ form.description }}</div>
-                    </div>
-                    <div class="row m-1 text-danger">
-                        <div class="col">{{ form.description.errors }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Terms and Conditions :</div>
-                <div class="col text-left">
-                    <div class="row">
-                        <div class="col">{{ form.terms_and_conditions }}</div>
-                    </div>
-                    <div class="row m-1 text-danger">
-                        <div class="col">{{ form.terms_and_conditions.errors }}</div>
-                    </div>
-                </div>
-            </div>
+                    <div class="card-body p-4">
+                        <form method="post" enctype="multipart/form-data" novalidate>
+                            {% csrf_token %}
+                            
+                            <!-- Display form errors -->
+                            {% if form.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2">error</span>
+                                        <strong>Please correct the errors below:</strong>
+                                    </div>
+                                    <ul class="mb-0 mt-2">
+                                        {% for field in form %}
+                                            {% for error in field.errors %}
+                                                <li>{{ field.label }}: {{ error|escape }}</li>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        {% for error in form.non_field_errors %}
+                                            <li>{{ error|escape }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
 
-            <h2 class="text-center m-2">Attachments</h2>
-            {{ form_file.management_form }}
-            {{ form_file.non_form_errors }}
-            {% for form in form_file %}
-                <div class="inline {{ form_file.prefix }} my-4">
-                    <div class="row">
-                        <div class="col-11">
-                            {% for field in form %}
-                                <div class="col-6">{{ field }}</div>
-                            {% endfor %}
-                        </div>
-                    {% if form.id.value %}
-                    <div class="col-1">
-                        <a href="{% url 'workshop_app:delete_attachment_file' form.id.value %}"><button class="btn btn-md btn-danger float-right" type="button">Delete</button></a>
-                    </div>
-                    {% endif %}
-                    </div>
+                            <div class="row g-3">
+                                <!-- Workshop Name -->
+                                <div class="col-12">
+                                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                                        <span class="material-icons me-1">school</span>
+                                        Workshop Name <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <span class="material-icons">workshop</span>
+                                        </span>
+                                        {{ form.name|add_class:"form-control" }}
+                                    </div>
+                                </div>
 
-                </div>
-                <hr>
-            {% endfor %}
-            <div class="row my-3">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-md btn-primary float-right m-3">Save</button>
+                                <!-- Duration -->
+                                <div class="col-md-6">
+                                    <label for="{{ form.duration.id_for_label }}" class="form-label">
+                                        <span class="material-icons me-1">schedule</span>
+                                        Duration (Days) <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <span class="material-icons">event</span>
+                                        </span>
+                                        {{ form.duration|add_class:"form-control" }}
+                                    </div>
+                                    {% if form.duration.help_text %}
+                                        <div class="form-text">{{ form.duration.help_text }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Description -->
+                                <div class="col-12">
+                                    <label for="{{ form.description.id_for_label }}" class="form-label">
+                                        <span class="material-icons me-1">description</span>
+                                        Description <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.description|add_class:"form-control" }}
+                                </div>
+
+                                <!-- Terms and Conditions -->
+                                <div class="col-12">
+                                    <label for="{{ form.terms_and_conditions.id_for_label }}" class="form-label">
+                                        <span class="material-icons me-1">gavel</span>
+                                        Terms and Conditions <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.terms_and_conditions|add_class:"form-control" }}
+                                </div>
+                            </div>
+
+                            <!-- Attachments Section -->
+                            <div class="mt-5">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="material-icons me-2 text-primary">attach_file</span>
+                                    <h5 class="mb-0">Attachments</h5>
+                                </div>
+                                
+                                {{ form_file.management_form }}
+                                {% if form_file.non_form_errors %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ form_file.non_form_errors }}
+                                    </div>
+                                {% endif %}
+
+                                <div id="attachment-forms">
+                                    {% for form in form_file %}
+                                        <div class="inline {{ form_file.prefix }} mb-3 p-3 border rounded">
+                                            <div class="row g-3">
+                                                <div class="col-md-8">
+                                                    {% for field in form %}
+                                                        {% if field.name != 'id' %}
+                                                            <div class="mb-3">
+                                                                <label for="{{ field.id_for_label }}" class="form-label">
+                                                                    <span class="material-icons me-1">upload_file</span>
+                                                                    {{ field.label }}
+                                                                </label>
+                                                                {{ field|add_class:"form-control" }}
+                                                            </div>
+                                                        {% else %}
+                                                            {{ field }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                {% if form.id.value %}
+                                                    <div class="col-md-4 d-flex align-items-end">
+                                                        <a href="{% url 'workshop_app:delete_attachment_file' form.id.value %}" 
+                                                           class="btn btn-danger btn-sm w-100"
+                                                           onclick="return confirm('Are you sure you want to delete this attachment?')">
+                                                            <span class="material-icons me-1">delete</span>
+                                                            Delete Attachment
+                                                        </a>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="text-center mt-3">
+                                    <button type="button" class="btn btn-outline-primary inline-form-add">
+                                        <span class="material-icons me-1">add</span>
+                                        Add Another Attachment
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{% url 'workshop_app:workshop_type_list' %}" class="btn btn-outline-secondary">
+                                    <span class="material-icons me-1">cancel</span>
+                                    Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="material-icons me-1">save</span>
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-    <br><br><br><br>
+
     <script type="text/javascript">
         $(function () {
             $(".inline.{{ form_file.prefix }}").formset({
-                prefix: "{{ form_file.prefix }}", // The form prefix for your django formset
-                addCssClass: "btn btn-md btn-primary bordered inline-form-add", // CSS class applied to the add link
-                deleteCssClass: "hidden", // CSS class applied to the delete link
-                addText: 'Add another attachment', // Text for the add link
+                prefix: "{{ form_file.prefix }}",
+                addCssClass: "btn btn-outline-primary inline-form-add",
+                deleteCssClass: "hidden",
+                addText: '<span class="material-icons me-1">add</span>Add Another Attachment',
                 deleteText: '',
-                formCssClass: 'inline-form' // CSS class applied to each form in a formset
-            })
+                formCssClass: 'inline-form',
+                added: function(row) {
+                    // Add Bootstrap styling to dynamically added forms
+                    row.find('input, textarea, select').addClass('form-control');
+                    row.find('label').addClass('form-label');
+                }
+            });
         });
     </script>
 {% endblock %}
