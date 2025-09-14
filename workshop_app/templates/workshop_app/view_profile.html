@@ -1,129 +1,333 @@
 {% extends 'workshop_app/base.html' %}
+{% load custom_filters %}
 
-{% block title %} Profile {% endblock %}
+{% block title %} 
+    Profile - FOSSEE Workshop Booking
+{% endblock %}
 
-{% csrf_token %}
 {% block content %}
-
     <div class="container">
-        {% if Workshops %}
-            <table class="table table-bordered">
-                <tr>
-                    <th><label for="id_first_name"><h5>First name:</h5></label></th>
-                    <th><label for="id_first_name"><h5>{{ coordinator_profile.user.first_name }}</h5></label></th>
-                </tr>
-                <tr>
-                    <th><label for="id_last_name"><h5>Last name:</h5></label></th>
-                    <th><label for="id_last_name"><h5>{{ coordinator_profile.user.last_name }}</h5></label></th>
-                </tr>
-                <tr>
-                    <th><label for="id_email"><h5>Email:</h5></label></th>
-                    <th><label for="id_email"><h5>{{ coordinator_profile.user.email }}</h5></label></th>
-                </tr>
-                <tr>
-                    <th><label for="id_institute"><h5>Institute:</h5></label></th>
-                    <th><label for="id_institute"><h5>{{ coordinator_profile.user.profile.institute }}</h5></label></th>
-                </tr>
-                <tr>
-                    <th><label for="id_phone_number"><h5>Phone Number:</h5></label></th>
-                    <th><label for="id_phone_number"><h5>{{ coordinator_profile.user.profile.phone_number }}</h5></label>
-                    </th>
-                </tr>
-                <tr>
-                    <th><label for="id_department"><h5>Department:</h5></label></th>
-                    <th><label for="id_department"><h5>{{ coordinator_profile.user.profile.department }}</h5></label></th>
-                </tr>
-                <tr>
-                    <th><label for="id_location"><h5>Location:</h5></label></th>
-                    <th><label for="id_location"><h5>{{ coordinator_profile.user.profile.location }}</h5></label></th>
-                </tr>
-                <tr>
-                    <th><label for="id_position"><h5>Position:</h5></label></th>
-                    <th><label for="id_position"><h5>{{ coordinator_profile.user.profile.position }}</h5></label></th>
-                </tr>
-            </table>
-            <br>
-
-            <div class="container">
-            <h2>Workshop Details</h2>
-            <table class="table table-bordered">
-            <tr>
-                <th><label for="id_instructor_name">Instructor name</label></th>
-                <th><label for="id_workshop_date">Workshop date</label></th>
-                <th><label for="id_workshop_type">Workshop type</label></th>
-            </tr>
-            {% for workshop in Workshops %}
-                {% if workshop.instructor %}
-                    <tr>
-                        <td><label for="id_instructor_name">{{ workshop.instructor }}
-                        </label></td>
-                        <td><label for="id_workshop_date">{{ workshop.date }}</label>
-                        </td>
-                        <td><label for="id_workshop_type">{{ workshop.workshop_type }}</label>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td><span class="badge badge-warning">Pending</span></td>
-                        <td><label for="id_workshop_date">{{ workshop.date }}</label>
-                        </td>
-                        <td><label for="id_workshop_type">{{ workshop.workshop_type }}</label>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-            </table>
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <h1 class="h2 mb-1">
+                            <span class="material-icons me-2 text-primary">person</span>
+                            User Profile
+                        </h1>
+                        <p class="text-muted mb-0">View and manage user information</p>
+                    </div>
+                    <a href="{% url 'workshop_app:index' %}" class="btn btn-outline-primary">
+                        <span class="material-icons me-1">arrow_back</span>
+                        Back to Home
+                    </a>
+                </div>
             </div>
-            <br><br>
-        {% else %}
-            <form action="" method="post">
-              {% csrf_token %}
-                <div class="row justify-content-center form-group">
-                    <div class="col-md-6">
-                    <form action="" method="post">
-                        <fieldset>
-                            {% csrf_token %}
-                            {% if form.errors %}
-                                {% for field in form %}
-                                    {% for error in field.errors %}
-                                        <div class="alert alert-dismissible alert-danger">
-                                            <button type="button" class="close" data-dismiss="alert">
-                                                <i class="fa fa-close"></i>
-                                            </button>
-                                            <strong>{{field.label}} : {{ error|escape }}</strong>
+        </div>
+
+        {% if Workshops %}
+            <!-- Profile Information Card -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <span class="material-icons me-2">info</span>
+                                Personal Information
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2 text-primary">badge</span>
+                                        <div>
+                                            <small class="text-muted">First Name</small>
+                                            <div class="fw-medium">{{ coordinator_profile.user.first_name|title }}</div>
                                         </div>
-                                    {% endfor %}
-                                {% endfor %}
-                                {% for error in form.non_field_errors %}
-                                    <div class="alert alert-dismissible alert-danger">
-                                        <button type="button" class="close" data-dismiss="alert">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <strong>{{field.label}} : {{ error|escape }}</strong>
                                     </div>
-                                {% endfor %}
-                            {% endif %}
-                            <table class="table table-responsive-sm">
-                                <tr><td>{{form.title}}</td></tr>
-                                <tr><td>{{form.first_name}}</td></tr>
-                                <tr><td>{{form.last_name}}</td></tr>
-                                <tr><td>{{form.phone_number}}</td></tr>
-                                <tr><td>{{form.institute}}</td></tr>
-                                <tr><td>{{form.department}}</td></tr>
-                                <tr><td>{{form.position}}</td></tr>
-                                <tr><td>{{form.location}}</td></tr>
-                                <tr><td>{{form.state}}</td></tr>
-                            </table>
-                            <br>
-                        </fieldset>
-                        <button class="btn btn-success btn-lg" type="submit">
-                            <i class="fa fa-pencil-square-o"></i>&nbsp;Update</button>
-                        <a href="{% url 'workshop_app:index' %}" class="btn btn-primary btn-lg">Cancel
-                        </a>
-                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2 text-primary">badge</span>
+                                        <div>
+                                            <small class="text-muted">Last Name</small>
+                                            <div class="fw-medium">{{ coordinator_profile.user.last_name|title }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2 text-primary">email</span>
+                                        <div>
+                                            <small class="text-muted">Email</small>
+                                            <div class="fw-medium">{{ coordinator_profile.user.email }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2 text-primary">school</span>
+                                        <div>
+                                            <small class="text-muted">Institute</small>
+                                            <div class="fw-medium">{{ coordinator_profile.user.profile.institute }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2 text-primary">phone</span>
+                                        <div>
+                                            <small class="text-muted">Phone Number</small>
+                                            <div class="fw-medium">{{ coordinator_profile.user.profile.phone_number }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2 text-primary">business</span>
+                                        <div>
+                                            <small class="text-muted">Department</small>
+                                            <div class="fw-medium">{{ coordinator_profile.user.profile.department }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2 text-primary">location_on</span>
+                                        <div>
+                                            <small class="text-muted">Location</small>
+                                            <div class="fw-medium">{{ coordinator_profile.user.profile.location }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2 text-primary">work</span>
+                                        <div>
+                                            <small class="text-muted">Position</small>
+                                            <div>
+                                                <span class="badge bg-primary">
+                                                    {{ coordinator_profile.user.profile.position|title }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </form>
+            </div>
+
+            <!-- Workshop Details Card -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <span class="material-icons me-2">workshop</span>
+                                Workshop History
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-0">
+                                                <span class="material-icons me-1">person_pin</span>
+                                                Instructor
+                                            </th>
+                                            <th class="border-0">
+                                                <span class="material-icons me-1">event</span>
+                                                Date
+                                            </th>
+                                            <th class="border-0">
+                                                <span class="material-icons me-1">school</span>
+                                                Workshop Type
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for workshop in Workshops %}
+                                            <tr>
+                                                <td>
+                                                    {% if workshop.instructor %}
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="material-icons me-2 text-success">check_circle</span>
+                                                            <span class="fw-medium">{{ workshop.instructor }}</span>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="material-icons me-2 text-warning">schedule</span>
+                                                            <span class="badge bg-warning text-dark">Pending Assignment</span>
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <span class="fw-medium">{{ workshop.date|date:"M d, Y" }}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info text-dark">
+                                                        {{ workshop.workshop_type }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="3" class="text-center py-4">
+                                                    <div class="text-muted">
+                                                        <span class="material-icons mb-2" style="font-size: 3rem; opacity: 0.3;">workshop</span>
+                                                        <h6>No workshops found</h6>
+                                                        <p class="mb-0">This user hasn't participated in any workshops yet</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- Profile Update Form -->
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header text-center py-4">
+                            <h3 class="mb-0">
+                                <span class="material-icons me-2">edit</span>
+                                Update Profile
+                            </h3>
+                            <p class="text-muted mt-2 mb-0">Complete your profile information</p>
+                        </div>
+                        <div class="card-body p-4">
+                            <form method="post" novalidate>
+                                {% csrf_token %}
+                                
+                                <!-- Display form errors -->
+                                {% if form.errors %}
+                                    <div class="alert alert-danger" role="alert">
+                                        <div class="d-flex align-items-center">
+                                            <span class="material-icons me-2">error</span>
+                                            <strong>Please correct the errors below:</strong>
+                                        </div>
+                                        <ul class="mb-0 mt-2">
+                                            {% for field in form %}
+                                                {% for error in field.errors %}
+                                                    <li>{{ field.label }}: {{ error|escape }}</li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {% for error in form.non_field_errors %}
+                                                <li>{{ error|escape }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+
+                                <div class="row g-3">
+                                    <!-- Title -->
+                                    <div class="col-12">
+                                        <label for="{{ form.title.id_for_label }}" class="form-label">
+                                            <span class="material-icons me-1">title</span>
+                                            Title
+                                        </label>
+                                        {{ form.title|add_class:"form-control" }}
+                                    </div>
+
+                                    <!-- First Name -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                            <span class="material-icons me-1">badge</span>
+                                            First Name <span class="text-danger">*</span>
+                                        </label>
+                                        {{ form.first_name|add_class:"form-control" }}
+                                    </div>
+
+                                    <!-- Last Name -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                            <span class="material-icons me-1">badge</span>
+                                            Last Name <span class="text-danger">*</span>
+                                        </label>
+                                        {{ form.last_name|add_class:"form-control" }}
+                                    </div>
+
+                                    <!-- Phone Number -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.phone_number.id_for_label }}" class="form-label">
+                                            <span class="material-icons me-1">phone</span>
+                                            Phone Number
+                                        </label>
+                                        {{ form.phone_number|add_class:"form-control" }}
+                                    </div>
+
+                                    <!-- Institute -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.institute.id_for_label }}" class="form-label">
+                                            <span class="material-icons me-1">school</span>
+                                            Institute
+                                        </label>
+                                        {{ form.institute|add_class:"form-control" }}
+                                    </div>
+
+                                    <!-- Department -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.department.id_for_label }}" class="form-label">
+                                            <span class="material-icons me-1">business</span>
+                                            Department
+                                        </label>
+                                        {{ form.department|add_class:"form-control" }}
+                                    </div>
+
+                                    <!-- Position -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.position.id_for_label }}" class="form-label">
+                                            <span class="material-icons me-1">work</span>
+                                            Position
+                                        </label>
+                                        {{ form.position|add_class:"form-control" }}
+                                    </div>
+
+                                    <!-- Location -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.location.id_for_label }}" class="form-label">
+                                            <span class="material-icons me-1">location_on</span>
+                                            Location
+                                        </label>
+                                        {{ form.location|add_class:"form-control" }}
+                                    </div>
+
+                                    <!-- State -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.state.id_for_label }}" class="form-label">
+                                            <span class="material-icons me-1">map</span>
+                                            State
+                                        </label>
+                                        {{ form.state|add_class:"form-control" }}
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="d-flex justify-content-between mt-4">
+                                    <a href="{% url 'workshop_app:index' %}" class="btn btn-outline-secondary">
+                                        <span class="material-icons me-1">cancel</span>
+                                        Cancel
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="material-icons me-1">save</span>
+                                        Update Profile
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

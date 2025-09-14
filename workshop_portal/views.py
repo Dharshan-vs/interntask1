@@ -8,9 +8,13 @@ from cms.models import Page
 
 
 def index(request):
-    page = Page.objects.filter(title=settings.HOME_PAGE_TITLE)
-    if page.exists():
-        redirect_url = reverse("cms:home", args=[page.first().permalink])
-    else:
+    try:
+        page = Page.objects.filter(title=settings.HOME_PAGE_TITLE)
+        if page.exists():
+            redirect_url = reverse("cms:home", args=[page.first().permalink])
+        else:
+            redirect_url = reverse("workshop_app:index")
+    except Exception:
+        # If CMS is not properly set up, redirect to workshop app
         redirect_url = reverse("workshop_app:index")
     return redirect(redirect_url)

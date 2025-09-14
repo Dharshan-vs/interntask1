@@ -1,8 +1,9 @@
 {% extends "workshop_app/base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}
-    Propose a workshop
+    Propose Workshop - FOSSEE Workshop Booking
 {% endblock %}
 
 {% block extra-dependencies %}
@@ -28,7 +29,6 @@
                 beforeShowDay: $.datepicker.noWeekends,
             });
 
-
             $('#disp_tnc').click(function (e) {
                 e.preventDefault()
                 if ($('#id_workshop_type').val() === '')
@@ -46,74 +46,147 @@
     </script>
 {% endblock %}
 
-
 {% block content %}
-    <style type="text/css">
-        .errorlist {
-            color: red;
-        }
-
-    .modal-open .modal{
-        overflow-y: hidden;
-    }
-    </style>
-
-    <div class="container" align="center">
-        <div class="alert alert-info">
-            Note: Before proposing the workshop, please check about the workshop in the
-            <strong>Workshop Types</strong> section
-        </div>
-        <br><br>
-        <div class="col-md-6 col-md-offset-6">
-            <div class="card border-primary">
-                <div class="card-header">
-                    <h3>Propose Workshop</h3>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="text-center">
+                    <h1 class="h2 mb-3">
+                        <span class="material-icons me-2 text-primary">add_circle</span>
+                        Propose a Workshop
+                    </h1>
+                    <p class="text-muted">Request a new workshop session for your organization</p>
                 </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <form method="post">
+            </div>
+        </div>
+
+        <!-- Information Alert -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <span class="material-icons me-2">info</span>
+                    <div>
+                        <strong>Before proposing:</strong> Please check the workshop details in the 
+                        <a href="{% url 'workshop_app:workshop_type_list' %}" class="alert-link">Workshop Types</a> section
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Form -->
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header text-center py-4">
+                        <h3 class="mb-0">
+                            <span class="material-icons me-2">workshop</span>
+                            Workshop Proposal Form
+                        </h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="post" novalidate>
                             {% csrf_token %}
-                            <br/>
-                            {{ form.workshop_type }}
-                            <br>
-                            {{ form.date }}
-                            <br>
-                            {{ form.tnc_accepted }} I accept the
-                            <a href="#" id="disp_tnc" data-toggle="modal"
-                            data-target="#exampleModalCenter">
-                                terms and conditions
-                            </a>
-                            <br>
+                            
+                            <!-- Display form errors -->
                             {% if form.errors %}
-                                <br>
-                                <div style="text-align: left; border: 1px solid red; padding-top: 5px">
-                                    <h5 style="text-align: center; color: red; font-weight: bolder">Errors</h5>
-                                    {{ form.errors }}
+                                <div class="alert alert-danger" role="alert">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2">error</span>
+                                        <strong>Please correct the errors below:</strong>
+                                    </div>
+                                    <ul class="mb-0 mt-2">
+                                        {% for field in form %}
+                                            {% for error in field.errors %}
+                                                <li>{{ field.label }}: {{ error|escape }}</li>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        {% for error in form.non_field_errors %}
+                                            <li>{{ error|escape }}</li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                             {% endif %}
-                            <br>
-                            <button class="btn btn-success" type="submit">Submit</button>
+
+                            <!-- Workshop Type Field -->
+                            <div class="mb-4">
+                                <label for="{{ form.workshop_type.id_for_label }}" class="form-label">
+                                    <span class="material-icons me-1">school</span>
+                                    Workshop Type <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <span class="material-icons">library_books</span>
+                                    </span>
+                                    {{ form.workshop_type|add_class:"form-control form-select" }}
+                                </div>
+                                <div class="form-text">Select the type of workshop you want to propose</div>
+                            </div>
+
+                            <!-- Date Field -->
+                            <div class="mb-4">
+                                <label for="{{ form.date.id_for_label }}" class="form-label">
+                                    <span class="material-icons me-1">event</span>
+                                    Preferred Date <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <span class="material-icons">calendar_today</span>
+                                    </span>
+                                    {{ form.date|add_class:"form-control datepicker" }}
+                                </div>
+                                <div class="form-text">Select a date at least 3 days from today (weekends excluded)</div>
+                            </div>
+
+                            <!-- Terms and Conditions -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    {{ form.tnc_accepted|add_class:"form-check-input" }}
+                                    <label class="form-check-label" for="{{ form.tnc_accepted.id_for_label }}">
+                                        I accept the 
+                                        <a href="#" id="disp_tnc" data-bs-toggle="modal" data-bs-target="#termsModal" class="text-decoration-none">
+                                            terms and conditions
+                                        </a>
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <span class="material-icons me-2">send</span>
+                                    Submit Proposal
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <br>
-
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <!-- Terms and Conditions Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Terms and Conditions</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h5 class="modal-title" id="termsModalLabel">
+                        <span class="material-icons me-2">description</span>
+                        Terms and Conditions
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading terms and conditions...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
