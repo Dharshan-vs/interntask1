@@ -1,50 +1,134 @@
 {% extends 'workshop_app/base.html' %}
+{% load custom_filters %}
 
 {% block title %}
-    Add new Workshop type
+    Create Workshop Type - FOSSEE Workshop Booking
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <h2 class="text-center m-2">New Workshop Type</h2>
-        <br>
-        <form method="post">
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Workshop Name :</div>
-                <div class="col text-left">
-                    <div class="row"><div class="col">{{ form.name }}</div></div>
-                    <div class="row m-1 text-danger"><div class="col">{{ form.name.errors }}</div></div>
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <h1 class="h2 mb-1">
+                            <span class="material-icons me-2 text-primary">add_circle</span>
+                            Create Workshop Type
+                        </h1>
+                        <p class="text-muted mb-0">Add a new workshop type to the platform</p>
+                    </div>
+                    <a href="{% url 'workshop_app:workshop_type_list' %}" class="btn btn-outline-primary">
+                        <span class="material-icons me-1">arrow_back</span>
+                        Back to Workshop Types
+                    </a>
                 </div>
+            </div>
+        </div>
 
-            </div>
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Duration :</div>
-                <div class="col text-left">
-                    <div class="row"><div class="col">{{ form.duration }}</div></div>
-                    <div class="row m-1 text-muted"><div class="col">{{ form.duration.help_text }}</div></div>
-                    <div class="row m-1 text-danger"><div class="col">{{ form.duration.errors }}</div></div>
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Description :</div>
-                <div class="col text-left">
-                    <div class="row"><div class="col">{{ form.description }}</div></div>
-                    <div class="row m-1 text-danger"><div class="col">{{ form.description.errors }}</div></div>
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Terms and Conditions :</div>
-                <div class="col text-left">
-                    <div class="row"><div class="col">{{ form.terms_and_conditions }}</div></div>
-                    <div class="row m-1 text-danger"><div class="col">{{ form.terms_and_conditions.errors }}</div></div>
-                </div>
-            </div>
+        <!-- Form Card -->
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header text-center py-4">
+                        <h3 class="mb-0">
+                            <span class="material-icons me-2">workshop</span>
+                            Workshop Type Details
+                        </h3>
+                        <p class="text-muted mt-2 mb-0">Fill in the details for the new workshop type</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            
+                            <!-- Display form errors -->
+                            {% if form.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-icons me-2">error</span>
+                                        <strong>Please correct the errors below:</strong>
+                                    </div>
+                                    <ul class="mb-0 mt-2">
+                                        {% for field in form %}
+                                            {% for error in field.errors %}
+                                                <li>{{ field.label }}: {{ error|escape }}</li>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        {% for error in form.non_field_errors %}
+                                            <li>{{ error|escape }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
 
-            <div class="row my-3">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-md btn-primary float-right m-3">Create</button>
+                            <div class="row g-3">
+                                <!-- Workshop Name -->
+                                <div class="col-12">
+                                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                                        <span class="material-icons me-1">school</span>
+                                        Workshop Name <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <span class="material-icons">workshop</span>
+                                        </span>
+                                        {{ form.name|add_class:"form-control" }}
+                                    </div>
+                                </div>
+
+                                <!-- Duration -->
+                                <div class="col-md-6">
+                                    <label for="{{ form.duration.id_for_label }}" class="form-label">
+                                        <span class="material-icons me-1">schedule</span>
+                                        Duration (Days) <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <span class="material-icons">event</span>
+                                        </span>
+                                        {{ form.duration|add_class:"form-control" }}
+                                    </div>
+                                    {% if form.duration.help_text %}
+                                        <div class="form-text">{{ form.duration.help_text }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Description -->
+                                <div class="col-12">
+                                    <label for="{{ form.description.id_for_label }}" class="form-label">
+                                        <span class="material-icons me-1">description</span>
+                                        Description <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.description|add_class:"form-control" }}
+                                    <div class="form-text">Provide a detailed description of what this workshop covers</div>
+                                </div>
+
+                                <!-- Terms and Conditions -->
+                                <div class="col-12">
+                                    <label for="{{ form.terms_and_conditions.id_for_label }}" class="form-label">
+                                        <span class="material-icons me-1">gavel</span>
+                                        Terms and Conditions <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.terms_and_conditions|add_class:"form-control" }}
+                                    <div class="form-text">Specify the terms and conditions for this workshop type</div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{% url 'workshop_app:workshop_type_list' %}" class="btn btn-outline-secondary">
+                                    <span class="material-icons me-1">cancel</span>
+                                    Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="material-icons me-1">add</span>
+                                    Create Workshop Type
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 {% endblock %}
